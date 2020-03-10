@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Data Flow Azure integration sample</title>
+        <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" th:href="@{/assets/img/favicon.ico}"/>
+        <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
+    </head>
+    <body>
+        <div th:replace="templates::header"></div>
+        <div class="container">
+            <div class="page-header">
+                <div style="float:right;">
+                    <a target="_blank" th:href="@{https://github.com/jgrandja/oauth2-protocol-patterns}">
+                        <img th:src="@{/assets/img/github.png}">
+                    </a>
+                </div>
+                <h1>Data Flow Azure integration sample</h1>
+            </div>
+            <div>
+                <span th:replace="templates::dashboard"></span>
+            </div>
+        </div>
+        <br />
+        <div th:replace="templates::footer"></div>
+        <script src="/webjars/jquery/jquery.min.js" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script src="/webjars/bootstrap/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    </body>
+</html>

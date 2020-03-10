@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+#    org.springframework.boot.autoconfigure: DEBUG
+
+spring:
+  thymeleaf:
+    cache: false
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+  security:
+    oauth2:
+      client:
+        registration:
+          dataflow-web:
+            provider: azure
+            client-id: b504a32c-70bf-4da2-a116-97257b74736b
+            client-secret: O@fde5ibb8X_kBSN/49VRhvrLf=8YBwd
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
+              - offline_access
+              - api://dataflow-server/dataflow.create
+              - api://dataflow-server/dataflow.deploy
+              - api://dataflow-server/dataflow.destroy
+              - api://dataflow-server/dataflow.manage
+              - api://dataflow-server/dataflow.modify
+              - api://dataflow-server/dataflow.schedule
+              - api://dataflow-server/dataflow.view
+        provider:
+          azure:
+            issuer-uri: https://login.microsoftonline.com/11439311-814c-45af-91da-11a6029b5332/v2.0
+
+oauth2:
+  resource:
+    services:
+      dataflow-server:
+        uri: http://localhost:9000/dataflow-api

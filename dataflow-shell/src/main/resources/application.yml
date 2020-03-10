@@ -1,0 +1,26 @@
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+#    org.springframework.boot.autoconfigure: DEBUG
+
+spring:
+  main:
+    web-application-type: none
+  security:
+    oauth2:
+      client:
+        registration:
+          dataflow-shell:
+            provider: azure
+            client-id: 72a1af39-11fe-4a9b-a4f0-ecb94f1ae658
+            client-secret: t@8nn=yg3Gbl8nz9J/pqmPV--5-1W]Ey
+            authorization-grant-type: password
+            scope:
+              - offline_access
+              - api://dataflow-server/dataflow.view
+        provider:
+          azure:
+            issuer-uri: https://login.microsoftonline.com/11439311-814c-45af-91da-11a6029b5332/v2.0

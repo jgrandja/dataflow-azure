@@ -1,0 +1,1 @@
+= Azure AD integration for Spring Cloud Data Flow

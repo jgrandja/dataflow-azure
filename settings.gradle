@@ -1,0 +1,5 @@
+rootProject.name = 'dataflow-azure'
+
+include 'dataflow-web'
+include 'dataflow-server'
+include 'dataflow-shell'

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Data Flow Azure integration sample</title>
+        <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" th:href="@{/assets/img/favicon.ico}"/>
+        <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
+    </head>
+    <body>
+        <!-- Header -->
+        <div th:fragment="header">
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" th:src="@{/assets/img/logo.png}" /></a>
+                        </div>
+                        <div class="navbar-collapse collapse" id="navbar">
+                            <ul class="nav navbar-nav navbar-left">
+                                <li><a href="#" th:href="@{/session-state}">Session State</a></li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a id="user-menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${currentUser.firstName} + ' ' + ${currentUser.lastName}">User</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a id="sign-out" href="javascript:document.logoutForm.submit()">Sign Out</a></li>
+                                    </ul>
+                                    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+                                        <input hidden type="submit" value="Sign Out"/>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div><!--/.nav-collapse -->
+                    </div><!--/.container-fluid -->
+                </div>
+            </nav>
+        </div>
+        <!-- Dashboard -->
+        <div th:fragment="dashboard" class="panel panel-default panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a href="#" th:href="@{/dashboard}">dataflow-web &rarr; dataflow-server</a>
+                </h2>
+            </div>
+            <div th:if="${dataFlowServerCall}" class="panel-body">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr class="row">
+                        <th class="col-md-12">
+                            <h4>Flow Sequence</h4>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="row">
+                        <td class="col-md-12">
+                            <ol>
+                                <li><b>dataflow-web</b> calls <b>dataflow-server</b></li>
+                            </ol>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <span th:replace="::flowCall (flowCall=${dataFlowServerCall})"></span>
+            </div>
+        </div>
+        <!-- Flow Call -->
+        <span th:fragment="flowCall (flowCall)" th:each="serviceCall : ${flowCall.serviceCallResponses}">
+            <div th:replace="::serviceCall (serviceCaller=${flowCall},serviceCallee=${serviceCall})"></div>
+        </span>
+        <!-- Service Call -->
+        <table th:fragment="serviceCall (serviceCaller, serviceCallee)" class="table table-striped">
+            <thead>
+            <tr class="row">
+                <th class="col-md-12" colspan="2">
+                    <h4>
+                        <span th:text="${#strings.toUpperCase(serviceCaller.serviceName)}"></span>
+                        <small th:text="${serviceCaller.serviceUri}"></small>
+                        <span> &rarr; </span>
+                        <span th:text="${#strings.toUpperCase(serviceCallee.serviceName)}"></span>
+                        <small th:text="${serviceCallee.serviceUri}"></small>
+                    </h4>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="row">
+                <td class="col-md-4">jti:</td>
+                <td class="col-md-8">
+                    <mark><span th:text="${serviceCallee.jti}">jti</span></mark>
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="col-md-4">authorities:</td>
+                <td class="col-md-8" th:text="${#strings.listJoin(serviceCallee.authorities,', ')}">authorities</td>
+            </tr>
+            <tr class="row">
+                <td class="col-md-4">sub:</td>
+                <td class="col-md-8" th:text="${serviceCallee.sub}">sub</td>
+            </tr>
+            <tr class="row">
+                <td class="col-md-4">aud:</td>
+                <td class="col-md-8" th:text="${#strings.listJoin(serviceCallee.aud,', ')}">aud</td>
+            </tr>
+            <span th:if="${serviceCallee.additionalInfo}">
+                <tr class="row" th:each="info : ${serviceCallee.additionalInfo}">
+                    <td class="col-md-4" th:text="${info.key}">key</td>
+                    <td class="col-md-8" th:text="${info.value}">value</td>
+                </tr>
+            </span>
+            <tr class="row" th:if="${serviceCallee.serviceCallResponses}">
+                <span th:each="nextServiceCallee : ${serviceCallee.serviceCallResponses}">
+                    <div th:replace="::serviceCall (serviceCaller=${serviceCallee},serviceCallee=${nextServiceCallee})"></div>
+                </span>
+            </tr>
+            </tbody>
+        </table>
+        <!-- Footer -->
+        <div th:fragment="footer">
+            <footer>
+                <div class="container hidden-print">
+                    <div class="text-center">
+                        <p class="muted credit">Visit the <a href="https://spring.io/projects/spring-security" target="_blank">Spring Security</a> site for more <a href="https://github.com/spring-projects/spring-security/tree/master/samples/boot" target="_blank">samples</a>.</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
